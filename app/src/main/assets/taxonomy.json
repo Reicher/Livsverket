@@ -1,0 +1,18 @@
+[
+  {"id": "bacteria", "name": "Bakterier", "level": "domain", "parentId": null, "childCount": 0},
+  {"id": "archaea", "name": "Arkéer", "level": "domain", "parentId": null, "childCount": 0},
+  {"id": "eukaryotes", "name": "Eukaryoter", "level": "domain", "parentId": null, "childCount": 3},
+  {"id": "animals", "name": "Djur", "level": "kingdom", "parentId": "eukaryotes", "childCount": 2},
+  {"id": "plants", "name": "Växter", "level": "kingdom", "parentId": "eukaryotes", "childCount": 0},
+  {"id": "fungi", "name": "Svampar", "level": "kingdom", "parentId": "eukaryotes", "childCount": 0},
+  {"id": "chordata", "name": "Ryggsträngsdjur", "level": "phylum", "parentId": "animals", "childCount": 1},
+  {"id": "arthropoda", "name": "Leddjur", "level": "phylum", "parentId": "animals", "childCount": 0},
+  {"id": "mammalia", "name": "Däggdjur", "level": "class", "parentId": "chordata", "childCount": 1},
+  {"id": "aves", "name": "Fåglar", "level": "class", "parentId": "chordata", "childCount": 0},
+  {"id": "canidae", "name": "Hunddjur", "level": "family", "parentId": "mammalia", "childCount": 2},
+  {"id": "felidae", "name": "Kattdjur", "level": "family", "parentId": "mammalia", "childCount": 0},
+  {"id": "canis", "name": "Släktet Canis", "level": "genus", "parentId": "canidae", "childCount": 2},
+  {"id": "vulpes", "name": "Släktet Vulpes", "level": "genus", "parentId": "canidae", "childCount": 0},
+  {"id": "canis_lupus", "name": "Varg", "level": "species", "parentId": "canis", "childCount": 0},
+  {"id": "canis_latrans", "name": "Prärievarg", "level": "species", "parentId": "canis", "childCount": 0}
+]
