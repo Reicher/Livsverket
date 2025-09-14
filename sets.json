@@ -1,0 +1,23 @@
+[
+  {
+    "id": "2",
+    "scientificName": "Bacteria",
+    "rank": "domain",
+    "parentId": "",
+    "childCount": 0
+  },
+  {
+    "id": "2157",
+    "scientificName": "Archaea",
+    "rank": "domain",
+    "parentId": "",
+    "childCount": 0
+  },
+  {
+    "id": "2759",
+    "scientificName": "Eukaryota",
+    "rank": "domain",
+    "parentId": "",
+    "childCount": 0
+  }
+]
