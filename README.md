@@ -40,7 +40,7 @@ When the user clicks a set in the tree view, a small menu appears:
 * Each set contains:
 
     * `id`
-    * `nameSv`
+    * `scientificName`
     * `rank`
     * `parentId`
     * `childCount`

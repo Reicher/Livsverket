@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 interface SetItem {
   id: string
-  nameSv: string
+  scientificName: string
   rank: string
   parentId: string
   childCount: number
@@ -69,7 +69,7 @@ export default function App() {
               {breadcrumbs.map((b, idx) => (
                 <span key={b.id}>
                   {idx > 0 && ' / '}
-                  <button className="underline" onClick={() => explore(b.id)}>{b.nameSv}</button>
+                  <button className="underline" onClick={() => explore(b.id)}>{b.scientificName}</button>
                 </span>
               ))}
             </div>
@@ -78,7 +78,7 @@ export default function App() {
             {children.map(c => (
               <li key={c.id} className="border p-2 flex justify-between">
                 <div>
-                  <div className="font-semibold">{c.nameSv}</div>
+                  <div className="font-semibold">{c.scientificName}</div>
                   <div className="text-sm text-gray-600">{c.rank}</div>
                 </div>
                 <div className="space-x-1">
@@ -98,7 +98,7 @@ export default function App() {
             {collection.map(c => (
               <li key={c.id} className="border p-2 flex justify-between">
                 <div>
-                  <div className="font-semibold">{c.nameSv}</div>
+                  <div className="font-semibold">{c.scientificName}</div>
                   <div className="text-sm text-gray-600">{c.rank}</div>
                 </div>
                 <div>

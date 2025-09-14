@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
@@ -12,12 +14,12 @@ import (
 )
 
 type Set struct {
-	ID          string `json:"id"`
-	NameSv      string `json:"nameSv"`
-	Rank        string `json:"rank"`
-	ParentID    string `json:"parentId"`
-	ChildCount  int    `json:"childCount"`
-	Description string `json:"description,omitempty"`
+	ID             string `json:"id"`
+	ScientificName string `json:"scientificName"`
+	Rank           string `json:"rank"`
+	ParentID       string `json:"parentId"`
+	ChildCount     int    `json:"childCount"`
+	Description    string `json:"description,omitempty"`
 }
 
 type Sighting struct {
@@ -27,10 +29,137 @@ type Sighting struct {
 }
 
 type Server struct {
-	sets     map[string]Set
-	children map[string][]Set
-	dataDir  string
-	mu       sync.Mutex
+	sets      map[string]Set
+	children  map[string][]Set
+	idAliases map[string]string
+	dataDir   string
+	mu        sync.Mutex
+}
+
+const datasetKey = "3LR"
+const colBaseURL = "https://api.catalogueoflife.org"
+
+func (s *Server) resolveID(id string) (string, error) {
+	if col, ok := s.idAliases[id]; ok {
+		if col != "" {
+			return col, nil
+		}
+		set := s.sets[id]
+		cid, err := s.searchCOLID(set.ScientificName)
+		if err != nil {
+			return "", err
+		}
+		s.idAliases[id] = cid
+		set.ID = cid
+		s.sets[cid] = set
+		return cid, nil
+	}
+	return id, nil
+}
+
+func (s *Server) searchCOLID(name string) (string, error) {
+	u := fmt.Sprintf("%s/dataset/%s/nameusage/search?limit=1&q=%s", colBaseURL, datasetKey, url.QueryEscape(name))
+	resp, err := http.Get(u)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("COL search status: %s", resp.Status)
+	}
+	var res struct {
+		Result []struct {
+			ID string `json:"id"`
+		} `json:"result"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return "", err
+	}
+	if len(res.Result) == 0 {
+		return "", errors.New("not found")
+	}
+	return res.Result[0].ID, nil
+}
+
+func (s *Server) fetchSet(id string) (Set, error) {
+	if set, ok := s.sets[id]; ok {
+		return set, nil
+	}
+	colID, err := s.resolveID(id)
+	if err != nil {
+		return Set{}, err
+	}
+	if set, ok := s.sets[colID]; ok {
+		return set, nil
+	}
+	u := fmt.Sprintf("%s/dataset/%s/taxon/%s", colBaseURL, datasetKey, colID)
+	resp, err := http.Get(u)
+	if err != nil {
+		return Set{}, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return Set{}, fmt.Errorf("COL taxon status: %s", resp.Status)
+	}
+	var col struct {
+		ID         string `json:"id"`
+		Rank       string `json:"rank"`
+		ParentID   string `json:"parentId"`
+		ChildCount int    `json:"childCount"`
+		Name       struct {
+			ScientificName string `json:"scientificName"`
+		} `json:"name"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&col); err != nil {
+		return Set{}, err
+	}
+	set := Set{ID: col.ID, ScientificName: col.Name.ScientificName, Rank: col.Rank, ParentID: col.ParentID, ChildCount: col.ChildCount}
+	s.sets[col.ID] = set
+	return set, nil
+}
+
+func (s *Server) fetchChildren(id string) ([]Set, error) {
+	colID, err := s.resolveID(id)
+	if err != nil {
+		return nil, err
+	}
+	if list, ok := s.children[colID]; ok {
+		return list, nil
+	}
+	u := fmt.Sprintf("%s/dataset/%s/taxon/%s/children", colBaseURL, datasetKey, colID)
+	resp, err := http.Get(u)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("COL children status: %s", resp.Status)
+	}
+	var res struct {
+		Result []struct {
+			ID         string `json:"id"`
+			Rank       string `json:"rank"`
+			ParentID   string `json:"parentId"`
+			ChildCount int    `json:"childCount"`
+			Name       struct {
+				ScientificName string `json:"scientificName"`
+			} `json:"name"`
+		} `json:"result"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return nil, err
+	}
+	list := make([]Set, len(res.Result))
+	for i, c := range res.Result {
+		child := Set{ID: c.ID, ScientificName: c.Name.ScientificName, Rank: c.Rank, ParentID: c.ParentID, ChildCount: c.ChildCount}
+		s.sets[child.ID] = child
+		list[i] = child
+	}
+	s.children[colID] = list
+	if alias, ok := s.idAliases[id]; ok && alias == colID {
+		s.children[id] = list
+	}
+	return list, nil
 }
 
 func loadSets(path string) (map[string]Set, map[string][]Set, error) {
@@ -58,7 +187,11 @@ func NewServer(dataDir string) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Server{sets: sets, children: children, dataDir: dataDir}, nil
+	aliases := make(map[string]string)
+	for id := range sets {
+		aliases[id] = ""
+	}
+	return &Server{sets: sets, children: children, idAliases: aliases, dataDir: dataDir}, nil
 }
 
 func (s *Server) writeJSON(w http.ResponseWriter, v interface{}) {
@@ -77,24 +210,30 @@ func (s *Server) handleRootSets(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleSet(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if set, ok := s.getSet(id); ok {
-		s.writeJSON(w, set)
-	} else {
+	set, err := s.fetchSet(id)
+	if err != nil {
 		http.NotFound(w, r)
+		return
 	}
+	s.writeJSON(w, set)
 }
 
 func (s *Server) handleChildren(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	s.writeJSON(w, s.children[id])
+	list, err := s.fetchChildren(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	s.writeJSON(w, list)
 }
 
 func (s *Server) handleBreadcrumbs(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	var chain []Set
 	for id != "" && id != "root" {
-		set, ok := s.getSet(id)
-		if !ok {
+		set, err := s.fetchSet(id)
+		if err != nil {
 			break
 		}
 		chain = append([]Set{set}, chain...)
