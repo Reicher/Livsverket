@@ -105,14 +105,44 @@ When the user clicks a set in the tree view, a small menu appears:
 
 ---
 
-## 📄 README Requirements
+## 🚀 Getting Started
 
-README must describe how to:
+### Clone
 
-* Clone the repo
-* Install Node.js & Go
-* Run backend: `go run main.go` (reads/writes JSON files)
-* Run frontend: `pnpm i && pnpm dev`
-* Access app in browser
-* Troubleshoot (e.g., port conflicts)
-* License: MIT
+```bash
+git clone <repo>
+cd Livsverket
+```
+
+### Install
+
+Install [Node.js](https://nodejs.org/) and [Go](https://go.dev/).
+
+### Backend
+
+Run the API server (reads/writes JSON files in the repo root):
+
+```bash
+go run main.go
+```
+
+### Frontend
+
+In another terminal:
+
+```bash
+cd frontend
+pnpm install
+pnpm dev
+```
+
+Visit `http://localhost:5173` in your browser.
+
+### Troubleshooting
+
+* If ports `8080` (backend) or `5173` (frontend) are busy, set `PORT` or Vite's `--port` option.
+* Ensure JSON files (`sets.json`, `collections.json`, `sightings.json`) are writable.
+
+### License
+
+MIT
