@@ -1,0 +1,11 @@
+[
+  { "id": "bacteria", "nameSv": "Bakterier", "rank": "domain", "parentId": "root", "childCount": 0 },
+  { "id": "archaea", "nameSv": "Arkéer", "rank": "domain", "parentId": "root", "childCount": 0 },
+  { "id": "eukaryotes", "nameSv": "Eukaryoter", "rank": "domain", "parentId": "root", "childCount": 2 },
+  { "id": "animals", "nameSv": "Djur", "rank": "kingdom", "parentId": "eukaryotes", "childCount": 2 },
+  { "id": "plants", "nameSv": "Växter", "rank": "kingdom", "parentId": "eukaryotes", "childCount": 0 },
+  { "id": "mammals", "nameSv": "Däggdjur", "rank": "class", "parentId": "animals", "childCount": 1 },
+  { "id": "birds", "nameSv": "Fåglar", "rank": "class", "parentId": "animals", "childCount": 0 },
+  { "id": "primates", "nameSv": "Primater", "rank": "order", "parentId": "mammals", "childCount": 1 },
+  { "id": "humans", "nameSv": "Människa", "rank": "species", "parentId": "primates", "childCount": 0 }
+]
