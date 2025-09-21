@@ -168,47 +168,51 @@ button {
   height: 1.75rem;
 }
 
-.hierarchy-card {
-  text-align: left;
+.hierarchy-content {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1rem;
 }
 
 .hierarchy-tree {
-  margin-top: 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 0.65rem;
+  width: 100%;
+  max-width: 420px;
+  align-self: center;
 }
 
 .hierarchy-node {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.82);
   border: 1px solid rgba(56, 189, 248, 0.18);
-  border-radius: 14px;
-  padding: 0.95rem 1rem;
-  box-shadow: 0 16px 32px rgba(2, 6, 23, 0.55);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.45);
   transition: border-color 150ms ease-out, background 150ms ease-out;
 }
 
 .hierarchy-node:hover {
   border-color: rgba(56, 189, 248, 0.32);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(15, 23, 42, 0.92);
 }
 
 .hierarchy-node-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .hierarchy-node-label {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 .node-toggle {
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 1.6rem;
+  height: 1.6rem;
   border-radius: 999px;
   background: rgba(56, 189, 248, 0.14);
   border: 1px solid rgba(56, 189, 248, 0.3);
@@ -216,7 +220,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   line-height: 1;
   transition: background 150ms ease-out, transform 150ms ease-out;
@@ -240,12 +244,12 @@ button {
 }
 
 .hierarchy-children {
-  margin-top: 0.85rem;
+  margin-top: 0.6rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.6rem;
 }
 
-.hierarchy-card .status-message {
-  margin-top: 1.5rem;
+.hierarchy-status {
+  margin: 0.5rem 0 0;
 }

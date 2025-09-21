@@ -65,8 +65,8 @@ function createHierarchyNode(node, depth, expandedNodes, onToggleNode) {
   );
 
   const header = createElement('div', { className: 'hierarchy-node-header' }, [
-    createElement('span', { className: 'hierarchy-node-label' }, node.label),
-    toggleButton
+    toggleButton,
+    createElement('span', { className: 'hierarchy-node-label' }, node.label)
   ]);
 
   const children =
@@ -84,24 +84,26 @@ function createHierarchyNode(node, depth, expandedNodes, onToggleNode) {
     'div',
     {
       className: 'hierarchy-node',
-      style: { marginLeft: `${depth * 16}px` }
+      style: { marginLeft: `${depth * 12}px` }
     },
     [header, children]
   );
 }
 
 function createHierarchyContent(statusMessage, expandedNodes, onToggleNode) {
-  const content = createElement('main', { className: 'content-area' });
-  const card = createElement('section', { className: 'content-card hierarchy-card' }, [
-    createElement('h1', {}, PAGES.hierarchy.title),
+  const content = createElement('main', {
+    className: 'content-area hierarchy-content'
+  });
+  content.appendChild(
     createElement('div', { className: 'hierarchy-tree' }, [
       createHierarchyNode(HIERARCHY_DATA, 0, expandedNodes, onToggleNode)
-    ]),
-    statusMessage
-      ? createElement('p', { className: 'status-message' }, statusMessage)
-      : null
-  ]);
-  content.appendChild(card);
+    ])
+  );
+  if (statusMessage) {
+    content.appendChild(
+      createElement('p', { className: 'status-message hierarchy-status' }, statusMessage)
+    );
+  }
   return content;
 }
 
