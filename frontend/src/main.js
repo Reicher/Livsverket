@@ -128,11 +128,15 @@ function createContent(activePage, statusMessage, expandedNodes, onToggleNode) {
 function createNavButton(button, isActive, onSelect) {
   const icon = button.icon();
   icon.classList.add('nav-icon');
-  const label = createElement('span', {}, button.label);
-  const buttonElement = createElement('button', { className: 'nav-button', onClick: () => onSelect(button.key) }, [
-    icon,
-    label
-  ]);
+  const buttonElement = createElement(
+    'button',
+    {
+      className: 'nav-button',
+      onClick: () => onSelect(button.key),
+      attrs: { 'aria-label': button.label }
+    },
+    icon
+  );
   if (isActive) {
     buttonElement.classList.add('active');
   }
