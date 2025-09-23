@@ -158,7 +158,8 @@ async function fetchStatus() {
       throw new Error('Request failed');
     }
     const data = await response.json();
-    return data.message;
+    const message = typeof data.message === 'string' ? data.message.trim() : '';
+    return message === 'Backend is running' ? '' : message;
   } catch (error) {
     console.warn('Unable to reach backend:', error.message);
     return 'Backend connection unavailable';
