@@ -128,11 +128,15 @@ function createContent(activePage, statusMessage, expandedNodes, onToggleNode) {
 function createNavButton(button, isActive, onSelect) {
   const icon = button.icon();
   icon.classList.add('nav-icon');
-  const label = createElement('span', {}, button.label);
-  const buttonElement = createElement('button', { className: 'nav-button', onClick: () => onSelect(button.key) }, [
-    icon,
-    label
-  ]);
+  const buttonElement = createElement(
+    'button',
+    {
+      className: 'nav-button',
+      onClick: () => onSelect(button.key),
+      attrs: { 'aria-label': button.label }
+    },
+    icon
+  );
   if (isActive) {
     buttonElement.classList.add('active');
   }
@@ -154,7 +158,8 @@ async function fetchStatus() {
       throw new Error('Request failed');
     }
     const data = await response.json();
-    return data.message;
+    const message = typeof data.message === 'string' ? data.message.trim() : '';
+    return message === 'Backend is running' ? '' : message;
   } catch (error) {
     console.warn('Unable to reach backend:', error.message);
     return 'Backend connection unavailable';

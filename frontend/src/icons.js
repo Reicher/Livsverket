@@ -1,34 +1,24 @@
 import { createElement } from './mini-react.js';
 
-function createSvg(pathD) {
+function createMaterialIcon(name) {
   return createElement(
-    'svg',
+    'span',
     {
-      className: 'icon',
-      attrs: {
-        viewBox: '0 0 24 24',
-        xmlns: 'http://www.w3.org/2000/svg',
-        'aria-hidden': 'true'
-      }
+      className: 'material-symbols-rounded',
+      attrs: { 'aria-hidden': 'true' }
     },
-    createElement('path', { attrs: { d: pathD, fill: 'currentColor', 'fill-rule': 'evenodd', 'clip-rule': 'evenodd' } })
+    name
   );
 }
 
 export function hierarchyIcon() {
-  return createSvg(
-    'M5 6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v1.586A2 2 0 0 1 12 9h2a2 2 0 0 1 1.414.586L16 10.172 17.586 8.586A2 2 0 0 1 19 8h0a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h0a2 2 0 0 1-1.414-.586L16 13.828l-1.586 1.586A2 2 0 0 1 13 16h-1v2a3 3 0 0 1-3 3h0a3 3 0 0 1-3-3v-1.17a3 3 0 0 1-1.803-.884l-.143-.152A3 3 0 0 1 3 14v-1a3 3 0 0 1 .803-2.048l.143-.152A3 3 0 0 1 5 9.17z'
-  );
+  return createMaterialIcon('cruelty_free');
 }
 
 export function checklistIcon() {
-  return createSvg(
-    'M7 4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v16a2 2 0 0 1-2 2H10a3 3 0 0 1-3-3zm3.75 4.75a.75.75 0 0 0-1.5 0v.5a.75.75 0 0 0 1.5 0zm0 5a.75.75 0 0 0-1.5 0v.5a.75.75 0 0 0 1.5 0zm3-3.25a.75.75 0 0 1 0-1.5H16a.75.75 0 0 1 0 1.5zm0 5a.75.75 0 0 1 0-1.5H16a.75.75 0 0 1 0 1.5zM5 7.5A2.5 2.5 0 0 0 2.5 10v6A2.5 2.5 0 0 0 5 18.5H7A2.5 2.5 0 0 0 9.5 16v-6A2.5 2.5 0 0 0 7 7.5z'
-  );
+  return createMaterialIcon('checklist');
 }
 
 export function settingsIcon() {
-  return createSvg(
-    'M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5m-8.835 3.53a1.5 1.5 0 0 1 0-1.56l.77-1.335a1.5 1.5 0 0 1 1.221-.75l1.058-.07a.75.75 0 0 0 .654-.48l.384-.98a1.5 1.5 0 0 1 1.098-.918l1.517-.304a1.5 1.5 0 0 1 1.02.132l.915.457a.75.75 0 0 0 .674 0l.915-.457a1.5 1.5 0 0 1 1.02-.132l1.517.304a1.5 1.5 0 0 1 1.098.918l.384.98a.75.75 0 0 0 .654.48l1.058.07a1.5 1.5 0 0 1 1.221.75l.77 1.335a1.5 1.5 0 0 1 0 1.56l-.77 1.335a1.5 1.5 0 0 1-1.221.75l-1.058.07a.75.75 0 0 0-.654.48l-.384.98a1.5 1.5 0 0 1-1.098.918l-1.517.304a1.5 1.5 0 0 1-1.02-.132l-.915-.457a.75.75 0 0 0-.674 0l-.915.457a1.5 1.5 0 0 1-1.02.132l-1.517-.304a1.5 1.5 0 0 1-1.098-.918l-.384-.98a.75.75 0 0 0-.654-.48l-1.058-.07a1.5 1.5 0 0 1-1.221-.75z'
-  );
+  return createMaterialIcon('settings');
 }
